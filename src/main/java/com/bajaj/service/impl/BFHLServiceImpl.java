@@ -99,7 +99,8 @@ public class BFHLServiceImpl implements BFHLService {
 
     @Override
     public boolean isAlphabet(String s) {
-        return s != null && s.length() == 1 && Character.isLetter(s.charAt(0));
+        if (s == null || s.isEmpty()) return false;
+        return s.chars().allMatch(Character::isLetter);
     }
 
     @Override

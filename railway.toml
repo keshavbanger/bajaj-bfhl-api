@@ -1,0 +1,9 @@
+# Railway deployment config
+[build]
+builder = "dockerfile"
+
+[deploy]
+startCommand = "java -jar target/bfhl-api-0.0.1-SNAPSHOT.jar"
+healthcheckPath = "/bfhl/health"
+healthcheckTimeout = 60
+restartPolicyType = "on_failure"

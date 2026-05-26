@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
- * REST Controller exposing the two required BFHL endpoints:
+ * REST Controller exposing the required BFHL endpoints:
  *
- *   POST /bfhl  → processes data array
- *   GET  /health → health check
+ *   POST /bfhl          → processes data array
+ *   GET  /bfhl/health   → health check (nested)
+ *   GET  /health        → health check (root - required by Bajaj form)
  */
 @RestController
-@RequestMapping("/bfhl")
 @CrossOrigin(origins = "*")
 public class BFHLController {
 
@@ -26,24 +26,27 @@ public class BFHLController {
     }
 
     /**
-     * Processes the input data array and returns categorized results.
-     *
-     * @param request JSON body with "data" array
-     * @return 200 OK with BFHLResponse
+     * POST /bfhl — processes the input data array.
      */
-    @PostMapping
+    @PostMapping("/bfhl")
     public ResponseEntity<BFHLResponse> handlePost(@RequestBody BFHLRequest request) {
         BFHLResponse response = bfhlService.processData(request);
         return ResponseEntity.ok(response);
     }
 
     /**
-     * Health check endpoint.
-     *
-     * @return {"status": "UP"}
+     * GET /health — root-level health check (required by Bajaj form).
      */
     @GetMapping("/health")
-    public ResponseEntity<Map<String, String>> health() {
+    public ResponseEntity<Map<String, String>> healthRoot() {
+        return ResponseEntity.ok(Map.of("status", "UP"));
+    }
+
+    /**
+     * GET /bfhl/health — nested health check (also kept for compatibility).
+     */
+    @GetMapping("/bfhl/health")
+    public ResponseEntity<Map<String, String>> healthNested() {
         return ResponseEntity.ok(Map.of("status", "UP"));
     }
 }
